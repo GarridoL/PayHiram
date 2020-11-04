@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "433702130765",
+    "firebase_url": "https://payhiram.firebaseio.com",
+    "project_id": "payhiram",
+    "storage_bucket": "payhiram.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433702130765:android:98ddc939d229fe34a97804",
+        "android_client_info": {
+          "package_name": "com.payhiram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433702130765-4j11a1kn5tbtfe6hkk1t5n31bj96jt4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRugJowIOkZiOrjDSruCuII98acAP0IlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433702130765-4j11a1kn5tbtfe6hkk1t5n31bj96jt4s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
