@@ -29,7 +29,26 @@ export default class App extends React.Component{
   }
 
   componentDidMount(){
-    // this.getTheme()
+    this.getTheme()
+  }
+
+    
+  getTheme = async () => {
+    try {
+      const primary = await AsyncStorage.getItem(Helper.APP_NAME + 'primary');
+      const secondary = await AsyncStorage.getItem(Helper.APP_NAME + 'secondary');
+      const tertiary = await AsyncStorage.getItem(Helper.APP_NAME + 'tertiary');
+      if(primary != null && secondary != null && tertiary != null) {
+        const { setTheme } = this.props;
+        setTheme({
+          primary: primary,
+          secondary: secondary,
+          tertiary: tertiary
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   render() {
