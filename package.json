@@ -49,7 +49,7 @@
     "react-native-credit-card-input": "^0.4.1",
     "react-native-device-info": "^5.5.3",
     "react-native-draggable-view": "0.0.6",
-    "react-native-elements": "^2.0.4",
+    "react-native-elements": "^2.3.2",
     "react-native-geocoding": "^0.4.0",
     "react-native-geolocation-service": "^5.0.0",
     "react-native-gesture-handler": "^1.5.2",
