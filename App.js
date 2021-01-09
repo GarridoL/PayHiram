@@ -21,31 +21,17 @@ const mapDispatchToProps = dispatch => {
   };
 };
 let AppReduxNavigation = connect(mapStateToProps, mapDispatchToProps)(ReduxNavigation)
-export const store = createStore(rootReducer);
+const store = createStore(rootReducer);
 
 export default class App extends React.Component{
   constructor(props) {
     super(props);
   }
 
-  componentDidMount(){
-    this.getTheme()
-  }
 
-    
-  getTheme = async () => {
+  storeData = async (key, value) => {
     try {
-      const primary = await AsyncStorage.getItem(Helper.APP_NAME + 'primary');
-      const secondary = await AsyncStorage.getItem(Helper.APP_NAME + 'secondary');
-      const tertiary = await AsyncStorage.getItem(Helper.APP_NAME + 'tertiary');
-      if(primary != null && secondary != null && tertiary != null) {
-        const { setTheme } = this.props;
-        setTheme({
-          primary: primary,
-          secondary: secondary,
-          tertiary: tertiary
-        })
-      }
+      await AsyncStorage.setItem(`${Helper.APP_NAME}primary`, value)
     } catch (e) {
       console.log(e)
     }
