@@ -7,6 +7,9 @@ import AppNavigation from 'navigation';
 import { createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
+
+import { fcmService } from 'services/broadcasting/FCMService';
+import { localNotificationService } from 'services/broadcasting/LocalNotificationService';
 const AppContainer = createAppContainer(AppNavigation);
 
 function ReduxNavigation (props) {
@@ -28,6 +31,45 @@ export default class App extends React.Component{
     super(props);
   }
 
+  componentDidMount(){
+    this.firebaseNotification()
+  }
+
+  firebaseNotification(){
+    fcmService.registerAppWithFCM()
+    fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
+    localNotificationService.configure(this.onOpenNotification, 'Payhiram')
+    return () => {
+      console.log("[App] unRegister")
+      fcmService.unRegister()
+      localNotificationService.unRegister()
+    }
+  }
+
+  onRegister = (token) => {
+    console.log("[App] onRegister", token)
+  }
+
+  onNotification = (notify) => {
+    console.log("[App] onNotification", notify)
+    const options = {
+      soundName: 'default',
+      playSound: true
+    }
+
+    localNotificationService.showNotification(
+      0,
+      notify.title,
+      notify.body,
+      notify,
+      options,
+      "test"
+    )
+  }
+
+  onOpenNotification = (notify) => {
+    console.log("[App] onOpenNotification", notify )
+  }
 
   storeData = async (key, value) => {
     try {
