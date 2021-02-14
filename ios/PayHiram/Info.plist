@@ -41,6 +41,8 @@
 	<string>$(PRODUCT_NAME) requires to access your Music for notifications</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires to access your camera to upload images</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires FaceID access to allows you quick and secure access.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires to access your location and check stores nearby.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
