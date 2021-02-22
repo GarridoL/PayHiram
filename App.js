@@ -12,8 +12,82 @@ import { fcmService } from 'services/broadcasting/FCMService';
 import { localNotificationService } from 'services/broadcasting/LocalNotificationService';
 const AppContainer = createAppContainer(AppNavigation);
 
-function ReduxNavigation (props) {
-  return <AppContainer />
+class ReduxNavigation extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+
+
+  componentDidMount(){
+    // this.firebaseNotification()
+    this.getTheme()
+  }
+
+  // firebaseNotification(){
+  //   const { user } = this.props.state;
+  //   if(user == null){
+  //     return
+  //   }
+  //   fcmService.registerAppWithFCM()
+  //   fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
+  //   localNotificationService.configure(this.onOpenNotification, 'Payhiram')
+  //   return () => {
+  //     console.log("[App] unRegister")
+  //     fcmService.unRegister()
+  //     localNotificationService.unRegister()
+  //   }
+  // }
+
+  // onRegister = (token) => {
+  //   console.log("[App] onRegister", token)
+  // }
+
+  // onNotification = (notify) => {
+  //   console.log("[App] onNotification", notify)
+  //   const options = {
+  //     soundName: 'default',
+  //     playSound: true
+  //   }
+
+  //   localNotificationService.showNotification(
+  //     0,
+  //     notify.title,
+  //     notify.body,
+  //     notify,
+  //     options,
+  //     "test"
+  //   )
+  // }
+
+
+  getTheme = async () => {
+    try {
+      const primary = await AsyncStorage.getItem(Helper.APP_NAME + 'primary');
+      const secondary = await AsyncStorage.getItem(Helper.APP_NAME + 'secondary');
+      const tertiary = await AsyncStorage.getItem(Helper.APP_NAME + 'tertiary');
+      const fourth = await AsyncStorage.getItem(Helper.APP_NAME + 'fourth');
+      if(primary != null && secondary != null && tertiary != null) {
+        const { setTheme } = this.props;
+        setTheme({
+          primary: primary,
+          secondary: secondary,
+          tertiary: tertiary,
+          fourth: fourth
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+
+  onOpenNotification = (notify) => {
+    console.log("[App] onOpenNotification", notify )
+  }
+
+  render(){
+    return <AppContainer />
+  }
 }
 
 const mapStateToProps = state => ({ state: state })
@@ -29,54 +103,6 @@ const store = createStore(rootReducer);
 export default class App extends React.Component{
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount(){
-    this.firebaseNotification()
-  }
-
-  firebaseNotification(){
-    fcmService.registerAppWithFCM()
-    fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
-    localNotificationService.configure(this.onOpenNotification, 'Payhiram')
-    return () => {
-      console.log("[App] unRegister")
-      fcmService.unRegister()
-      localNotificationService.unRegister()
-    }
-  }
-
-  onRegister = (token) => {
-    console.log("[App] onRegister", token)
-  }
-
-  onNotification = (notify) => {
-    console.log("[App] onNotification", notify)
-    const options = {
-      soundName: 'default',
-      playSound: true
-    }
-
-    localNotificationService.showNotification(
-      0,
-      notify.title,
-      notify.body,
-      notify,
-      options,
-      "test"
-    )
-  }
-
-  onOpenNotification = (notify) => {
-    console.log("[App] onOpenNotification", notify )
-  }
-
-  storeData = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(`${Helper.APP_NAME}primary`, value)
-    } catch (e) {
-      console.log(e)
-    }
   }
 
   render() {
