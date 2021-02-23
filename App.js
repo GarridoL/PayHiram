@@ -7,9 +7,10 @@ import AppNavigation from 'navigation';
 import { createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
+import SystemVersion from 'services/System.js';
 
-import { fcmService } from 'services/broadcasting/FCMService';
-import { localNotificationService } from 'services/broadcasting/LocalNotificationService';
+// import { fcmService } from 'services/broadcasting/FCMService';
+// import { localNotificationService } from 'services/broadcasting/LocalNotificationService';
 const AppContainer = createAppContainer(AppNavigation);
 
 class ReduxNavigation extends React.Component{
@@ -21,6 +22,11 @@ class ReduxNavigation extends React.Component{
   componentDidMount(){
     // this.firebaseNotification()
     this.getTheme()
+    SystemVersion.checkVersion(response => {
+      this.setState({isLoading: false})
+      if(response == true){
+      }
+    })
   }
 
   // firebaseNotification(){
