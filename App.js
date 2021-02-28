@@ -31,13 +31,15 @@ class ReduxNavigation extends React.Component{
       const secondary = await AsyncStorage.getItem(Helper.APP_NAME + 'secondary');
       const tertiary = await AsyncStorage.getItem(Helper.APP_NAME + 'tertiary');
       const fourth = await AsyncStorage.getItem(Helper.APP_NAME + 'fourth');
+      const index = await AsyncStorage.getItem(Helper.APP_NAME + 'index');
       if(primary != null && secondary != null && tertiary != null) {
         const { setTheme } = this.props;
         setTheme({
           primary: primary,
           secondary: secondary,
           tertiary: tertiary,
-          fourth: fourth
+          fourth: fourth,
+          index: index
         })
       }
     } catch (e) {
