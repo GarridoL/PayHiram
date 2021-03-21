@@ -132,8 +132,8 @@ android {
         applicationId "com.payhiram"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 46
-        versionName "4.6"
+        versionCode 47
+        versionName "4.7"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
     }
