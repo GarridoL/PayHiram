@@ -7,6 +7,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
 #import "RNFBMessagingModule.h"
+#import <GoogleMaps/GoogleMaps.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -51,7 +52,8 @@ static void InitializeFlipper(UIApplication *application) {
   InitializeFlipper(application);
 #endif
 
-  
+  [GMSServices provideAPIKey:@"AIzaSyAxT8ShiwiI7AUlmRdmDp5Wg_QtaGMpTjg"]; // add this line using the api key obtained from Google Console
+
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
