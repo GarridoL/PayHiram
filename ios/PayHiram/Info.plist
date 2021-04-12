@@ -53,9 +53,9 @@
 	<string>$(PRODUCT_NAME) requires to access the microsphone</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires to access your location and check stores nearby.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires to access your photos to upload images</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires to access your photos to upload images</string>
+	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires to access your photos to upload images</string>
 	<key>UIBackgroundModes</key>
 	<array>

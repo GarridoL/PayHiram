@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -8,7 +8,11 @@ import { createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
 import SystemVersion from 'services/System.js';
+import Modal from "react-native-modal";
+import AcceptPayment from 'modules/modal/AcceptPayment'
 const AppContainer = createAppContainer(AppNavigation);
+const height = Math.round(Dimensions.get('window').height);
+const width = Math.round(Dimensions.get('window').width);
 
 class ReduxNavigation extends React.Component{
   constructor(props) {
@@ -53,7 +57,23 @@ class ReduxNavigation extends React.Component{
   }
 
   render(){
-    return <AppContainer />
+    const { acceptPayment, user } = this.props.state
+    return (
+      <View style={{
+        flex: 1
+      }}>
+        <AppContainer />
+        {
+          (user && acceptPayment) && (
+            <AcceptPayment
+              visible={true}
+              data={acceptPayment}
+              user={user}
+            /> 
+          )
+        }
+      </View>
+    )
   }
 }
 
