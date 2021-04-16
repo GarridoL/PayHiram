@@ -8,8 +8,6 @@ import { createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
 import SystemVersion from 'services/System.js';
-import Modal from "react-native-modal";
-import AcceptPayment from 'modules/modal/AcceptPayment'
 const AppContainer = createAppContainer(AppNavigation);
 const height = Math.round(Dimensions.get('window').height);
 const width = Math.round(Dimensions.get('window').width);
@@ -63,15 +61,6 @@ class ReduxNavigation extends React.Component{
         flex: 1
       }}>
         <AppContainer />
-        {
-          (user && acceptPayment) && (
-            <AcceptPayment
-              visible={true}
-              data={acceptPayment}
-              user={user}
-            /> 
-          )
-        }
       </View>
     )
   }
