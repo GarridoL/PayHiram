@@ -22,6 +22,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>yes</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -57,8 +59,6 @@
 	<string>$(PRODUCT_NAME) requires to access your photos to upload images</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires to access your photos to upload images</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>yes</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
