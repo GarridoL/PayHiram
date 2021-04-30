@@ -39,6 +39,7 @@
           <data android:scheme="http" />
           <data android:scheme="https" />
           <data android:host="payhiram.ph"/>
+          <data android:host="admin.payhiram.ph"/>
         </intent-filter>
       </activity>
       <meta-data
