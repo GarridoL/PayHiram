@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, PanResponder } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -15,6 +15,16 @@ const width = Math.round(Dimensions.get('window').width);
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
+    this.state = {
+      timer: false,
+      timeForInactivityInSecond: 1
+    }
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => {
+        // console.log('user starts touch');
+        this.resetInactivityTimeout()
+      },
+    })
   }
 
 
@@ -25,6 +35,7 @@ class ReduxNavigation extends React.Component{
       if(response == true){
       }
     })
+    this.resetInactivityTimeout()
   }
 
   getTheme = async () => {
@@ -54,12 +65,25 @@ class ReduxNavigation extends React.Component{
     console.log("[App] onOpenNotification", notify )
   }
 
+
+  resetInactivityTimeout = () => {
+    let timer = setTimeout(() => {
+      // action after user has been detected idle
+      console.log('no activity')
+    }, this.state.timeForInactivityInSecond * 10)
+    this.setState({
+      timer: timer
+    })
+  }
+
   render(){
     const { acceptPayment, user } = this.props.state
     return (
       <View style={{
         flex: 1
-      }}>
+      }}
+      {...this.panResponder.panHandlers}
+      >
         <AppContainer />
       </View>
     )
