@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, PanResponder } from 'react-native';
+import { View, Dimensions, PanResponder, Platform } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -11,13 +11,15 @@ import SystemVersion from 'services/System.js';
 const AppContainer = createAppContainer(AppNavigation);
 const height = Math.round(Dimensions.get('window').height);
 const width = Math.round(Dimensions.get('window').width);
+import BackgroundTimer from 'react-native-background-timer';
 
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       timer: false,
-      timeForInactivityInSecond: 1
+      timeForInactivityInSecond: 1,
+      interval: null
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
@@ -65,15 +67,30 @@ class ReduxNavigation extends React.Component{
     console.log("[App] onOpenNotification", notify )
   }
 
+  incrementTime = () => {
+    console.log('Timer is ' + this.state.timer)
+    this.setState({
+      timer: this.state.timer + 1
+    })
+  }
 
   resetInactivityTimeout = () => {
-    let timer = setTimeout(() => {
-      // action after user has been detected idle
-      console.log('no activity')
-    }, this.state.timeForInactivityInSecond * 10)
-    this.setState({
-      timer: timer
-    })
+    const { timer } = this.state;
+
+    if(timer > 20){
+      console.log('show modal here')
+    }else{
+      BackgroundTimer.stopBackgroundTimer()
+      
+      this.setState({
+        timer: 0
+      })
+
+      BackgroundTimer.runBackgroundTimer(() => { 
+        this.incrementTime() 
+      }, 1000);
+    }
+    
   }
 
   render(){
