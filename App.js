@@ -70,7 +70,7 @@ class ReduxNavigation extends React.Component{
     let timer = setTimeout(() => {
       // action after user has been detected idle
       console.log('no activity')
-    }, this.state.timeForInactivityInSecond * 10)
+    }, this.state.timeForInactivityInSecond * 1000)
     this.setState({
       timer: timer
     })
