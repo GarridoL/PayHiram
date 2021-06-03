@@ -17,6 +17,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* PayHiramTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PayHiramTests.m */; };
 		526BB28625D4D4A80093AC32 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 526BB28525D4D4A80093AC32 /* GoogleService-Info.plist */; };
 		526BB28A25D50F9B0093AC32 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526BB28925D50F9B0093AC32 /* File.swift */; };
+		52D826A926428EE8003E1186 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 52D826A826428EE8003E1186 /* logo.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BC923E8308F28C45127F1146 /* libPods-PayHiram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE70DC9F8979F06B638FBA8 /* libPods-PayHiram.a */; };
 		CA1A719495760A42F9955434 /* libPods-PayHiram-PayHiramTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D37B50DFFA2EB5BB9931B9 /* libPods-PayHiram-PayHiramTests.a */; };
@@ -63,6 +64,7 @@
 		526BB28525D4D4A80093AC32 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		526BB28825D50F9A0093AC32 /* PayHiram-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PayHiram-Bridging-Header.h"; sourceTree = "<group>"; };
 		526BB28925D50F9B0093AC32 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		52D826A826428EE8003E1186 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = ../payhirammobile/assets/logo.png; sourceTree = "<group>"; };
 		5CA150BF409E94AF7B2E568F /* libPods-PayHiram-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PayHiram-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PayHiram/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		85ACD651F54D20D076D497E2 /* Pods-PayHiram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PayHiram.release.xcconfig"; path = "Target Support Files/Pods-PayHiram/Pods-PayHiram.release.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				52D826A826428EE8003E1186 /* logo.png */,
 				526BB28525D4D4A80093AC32 /* GoogleService-Info.plist */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -351,6 +354,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D826A926428EE8003E1186 /* logo.png in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				526BB28625D4D4A80093AC32 /* GoogleService-Info.plist in Resources */,
@@ -685,13 +689,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PayHiram/PayHiram.entitlements;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_TEAM = QZW8TLN78F;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PayHiram/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -713,12 +717,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PayHiram/PayHiram.entitlements;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_TEAM = QZW8TLN78F;
 				INFOPLIST_FILE = PayHiram/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

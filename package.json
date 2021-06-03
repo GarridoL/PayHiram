@@ -51,6 +51,7 @@
     "react-native": "0.63.3",
     "react-native-app-intro-slider": "^3.0.0",
     "react-native-appstore-version-checker": "^3.0.0",
+    "react-native-background-timer": "^2.4.1",
     "react-native-button": "^3.0.1",
     "react-native-camera": "^3.21.0",
     "react-native-credit-card-input": "^0.4.1",
