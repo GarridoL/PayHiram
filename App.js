@@ -14,7 +14,6 @@ const width = Math.round(Dimensions.get('window').width);
 import BackgroundTimer from 'react-native-background-timer';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useNavigation } from '@react-navigation/native';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
@@ -178,6 +177,7 @@ class ReduxNavigation extends React.Component{
                             timer: 0
                           })
                           this.props.logout()
+                          navigationRef.current?._navigation.navigate('loginStack')
                         }}
                         resetInactivityTimeout={() => {
                           this.setState({
