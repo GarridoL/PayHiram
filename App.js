@@ -86,7 +86,7 @@ class ReduxNavigation extends React.Component{
       return
     }
 
-    if(timer > 10){
+    if(timer > 300){
       console.log('show modal here')
       this.setState({
         showModal: true
@@ -184,7 +184,9 @@ class ReduxNavigation extends React.Component{
                             showModal: false,
                             timer: 0
                           })
-                          this.resetInactivityTimeout()
+                          setTimeout(() => {
+                            this.resetInactivityTimeout()
+                          }, 100)
                         }}/>
                   </View>
                 </View>
