@@ -14,8 +14,9 @@ const width = Math.round(Dimensions.get('window').width);
 import BackgroundTimer from 'react-native-background-timer';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import Button from 'components/Form/Button';
+import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
+import { navigationRef } from 'modules/generic/SecurityAlert';
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
@@ -77,15 +78,6 @@ class ReduxNavigation extends React.Component{
     })
   }
 
-  deAuthenticate = () => {
-    const { logout, setActiveRoute } = this.props;
-    this.setState({
-      showModal: false,
-      timer: 0
-    })
-    logout();
-  }
-
   resetInactivityTimeout = () => {
     const { timer } = this.state;
     const { user } = this.props.state;
@@ -122,115 +114,84 @@ class ReduxNavigation extends React.Component{
       }}
       {...this.panResponder.panHandlers}
       >
-        <AppContainer />
-        {
-          showModal && (
-            <Modal visible={showModal}>
-              <View style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                flex: 1
-              }}>
+        <AppContainer ref={navigationRef}/>
+          {
+            showModal && (
+              <Modal visible={showModal}>
                 <View style={{
-                  minHeight: 100,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 20,
-                  paddingBottom: 20,
-                  borderRadius: 12,
-                  width: '80%',
-                  marginRight: '10%',
-                  marginLeft: '10%',
-                  backgroundColor: 'white'
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  flex: 1
                 }}>
+                  <View style={{
+                    minHeight: 100,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    borderRadius: 12,
+                    width: '80%',
+                    marginRight: '10%',
+                    marginLeft: '10%',
+                    backgroundColor: 'white'
+                  }}>
 
-                    {
-                      /*Action buttons*/
-                    }
+                      {
+                        /*Action buttons*/
+                      }
 
-                    <View style={{
-                      width: '100%',
-                      alignItems: 'center'
-                    }}>
-                      <FontAwesomeIcon icon={faExclamationTriangle} size={50} color={Color.danger}/>
-                    </View>
+                      <View style={{
+                        width: '100%',
+                        alignItems: 'center'
+                      }}>
+                        <FontAwesomeIcon icon={faExclamationTriangle} size={50} color={Color.danger}/>
+                      </View>
 
-                    <Text style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      paddingTop: 10,
-                      textAlign: 'center',
-                    }}>
-                      Security Alert!
-                    </Text>
+                      <Text style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        paddingTop: 10,
+                        textAlign: 'center',
+                      }}>
+                        Security Alert!
+                      </Text>
 
-                    <Text style={{
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      paddingTop: 50,
-                      paddingBottom: 50,
-                      textAlign: 'center',
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      color: Color.danger
-                    }}>
-                      You've have been away for the passed minutes. We want to make sure it's you!
-                    </Text>
+                      <Text style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        paddingTop: 50,
+                        paddingBottom: 50,
+                        textAlign: 'center',
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        color: Color.danger
+                      }}>
+                        You've have been away for the passed minutes. We want to make sure it's you!
+                      </Text>
 
-                    <View style={{
-                      flexDirection: 'row',
-                      width: '100%',
-                      justifyContent: 'space-between',
-                      alignItems: 'space-between'
-                    }}>
-                      <Button
-                        onClick={() => {
-                          this.deAuthenticate()
+                      <ModalFooter
+                        reset={() => {
+                          this.setState({
+                            showModal: false,
+                            timer: 0
+                          })
+                          this.props.logout()
+                          navigationRef.current?._navigation.navigate('loginStack')
                         }}
-                        title={'Logout'}
-                        style={{
-                          borderColor: Color.danger,
-                          borderWidth: 1,
-                          width: '45%',
-                          height: 50,
-                          borderRadius: 25,
-                          backgroundColor: 'transparent'
-                        }}
-                        textStyle={{
-                          color: Color.danger,
-                          fontSize: BasicStyles.standardFontSize
-                        }}
-                      />
-
-
-                      <Button
-                        onClick={() => {
+                        resetInactivityTimeout={() => {
                           this.setState({
                             showModal: false,
                             timer: 0
                           })
                           this.resetInactivityTimeout()
-                        }}
-                        title={"Continue using"}
-                        style={{
-                          backgroundColor: theme ? theme.secondary : Color.secondary,
-                          width: '45%',
-                          height: 50,
-                          borderRadius: 25,
-                        }}
-                        textStyle={{
-                          color: Color.white,
-                          fontSize: BasicStyles.standardFontSize
-                        }}
-                      />
-                    </View>
+                        }}/>
+                  </View>
                 </View>
-              </View>
 
-            </Modal>
-          )
-        }
+              </Modal>
+            )
+          }
       </View>
     )
   }
@@ -263,7 +224,7 @@ export default class App extends React.Component{
             flex: 1,
             backgroundColor: '#ffffff'
           }}>
-            <AppReduxNavigation />
+            <AppReduxNavigation {...this.props}/>
         </View>
       </Provider>
     );
