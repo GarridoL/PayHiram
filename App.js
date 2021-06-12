@@ -17,6 +17,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
+const minutes = 60
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
@@ -24,7 +25,9 @@ class ReduxNavigation extends React.Component{
       timer: false,
       timeForInactivityInSecond: 1,
       interval: null,
-      showModal: false
+      showModal: false,
+      message: null,
+      params: "manual"
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
@@ -86,11 +89,29 @@ class ReduxNavigation extends React.Component{
       return
     }
 
-    if(timer > 300){
+
+    if(timer > (minutes * 5)){
+      // logout here
+      this.setState({
+        params: "auto",
+        message: "You've been away for the past " + parseInt(timer / 60) + " minutes. For your security, kindly login again."
+      })
+      setTimeout(() => {
+        this.setState({
+          showModal: true,
+        })
+      }, 100)
+    }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
       console.log('show modal here')
       this.setState({
-        showModal: true
+        params: "recover",
+        message: "You've have been away for the past " + parseInt(timer / 60) + " minutes. We want to make sure if it still you!",
       })
+      setTimeout(() => {
+        this.setState({
+          showModal: true,
+        })
+      }, 100)
     }else{
       BackgroundTimer.stopBackgroundTimer()
       
@@ -117,7 +138,10 @@ class ReduxNavigation extends React.Component{
         <AppContainer ref={navigationRef}/>
           {
             showModal && (
-              <Modal visible={showModal}>
+              <Modal
+                visible={showModal}
+                animationType={'slide'}
+                transparent={true}>
                 <View style={{
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -167,7 +191,7 @@ class ReduxNavigation extends React.Component{
                         paddingRight: 20,
                         color: Color.danger
                       }}>
-                        You've have been away for the passed minutes. We want to make sure it's you!
+                        {this.state.message}
                       </Text>
 
                       <ModalFooter
@@ -179,6 +203,7 @@ class ReduxNavigation extends React.Component{
                           this.props.logout()
                           navigationRef.current?._navigation.navigate('loginStack')
                         }}
+                        params={this.state.params}
                         resetInactivityTimeout={() => {
                           this.setState({
                             showModal: false,
