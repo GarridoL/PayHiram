@@ -137,9 +137,11 @@ class ReduxNavigation extends React.Component{
         showModal: false
       })
 
-      BackgroundTimer.runBackgroundTimer(() => { 
-        this.incrementTime() 
-      }, 1000);
+      if(timer == 0){
+        BackgroundTimer.runBackgroundTimer(() => { 
+          this.incrementTime() 
+        }, 1000);
+      }
     }
     
   }
