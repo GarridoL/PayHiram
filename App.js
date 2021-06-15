@@ -218,12 +218,12 @@ class ReduxNavigation extends React.Component{
                             showModal: false,
                             timer: 0
                           })
+                          this.props.logout()
                           setTimeout(() => {
                             this.setState({
                               showModal: false,
                               timer: 0
                             })
-                            this.props.logout()
                             navigationRef.current?._navigation.navigate('loginStack')
                           }, 100)
                         }}
