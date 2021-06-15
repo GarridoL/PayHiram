@@ -118,7 +118,7 @@ class ReduxNavigation extends React.Component{
       console.log('show modal here')
       this.setState({
         params: "recover",
-        message: "You've have been away for the past " + parseInt(timer / 60) + " minutes. We want to make sure if it still you!",
+        message: "You've have been away for the past " + parseInt(timer / 60) + " minute(s). We want to make sure if it still you!",
       })
       setTimeout(() => {
         this.setState({
