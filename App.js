@@ -99,6 +99,7 @@ class ReduxNavigation extends React.Component{
     const { user } = this.props.state;
 
     if(user == null){
+      BackgroundTimer.stopBackgroundTimer()
       this.setState({
         showModal: false,
         timer: 0
@@ -130,7 +131,9 @@ class ReduxNavigation extends React.Component{
         })
       }, 100)
     }else{
-      BackgroundTimer.stopBackgroundTimer()
+      if(timer > 0){
+        BackgroundTimer.stopBackgroundTimer()
+      }
       
       this.setState({
         timer: 0,
@@ -221,6 +224,7 @@ class ReduxNavigation extends React.Component{
                             timer: 0
                           })
                           this.props.logout()
+                          BackgroundTimer.stopBackgroundTimer()
                           setTimeout(() => {
                             this.setState({
                               showModal: false,
