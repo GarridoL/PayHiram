@@ -17,7 +17,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
-const minutes = 10
+const minutes = 60
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
@@ -103,7 +103,7 @@ class ReduxNavigation extends React.Component{
     }
 
 
-    if(timer > (minutes * 5)){
+    if(timer > (minutes * 3)){
       // logout here
       this.setState({
         params: "auto",
@@ -114,7 +114,7 @@ class ReduxNavigation extends React.Component{
           showModal: true,
         })
       }, 100)
-    }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
+    }else if(timer > (minutes * 1) && timer <= (minutes * 3)){
       console.log('show modal here')
       this.setState({
         params: "recover",
@@ -150,7 +150,7 @@ class ReduxNavigation extends React.Component{
       >
         <AppContainer ref={navigationRef}/>
           {
-            showModal && (
+            (showModal && user) && (
               <Modal
                 visible={showModal}
                 animationType={'slide'}
