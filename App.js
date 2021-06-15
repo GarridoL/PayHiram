@@ -22,12 +22,12 @@ class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      timer: false,
+      timer: 0,
       timeForInactivityInSecond: 1,
       interval: null,
       showModal: false,
       message: null,
-      params: "manual"
+      params: "recover"
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
@@ -39,6 +39,10 @@ class ReduxNavigation extends React.Component{
 
 
   componentDidMount(){
+    this.setState({
+      timer: 0,
+      showModal: false
+    })
     this.getTheme()
     SystemVersion.checkVersion(response => {
       this.setState({isLoading: false})
@@ -90,7 +94,7 @@ class ReduxNavigation extends React.Component{
     }
 
 
-    if(timer > (minutes * 5)){
+    if(timer > (minutes * 4)){
       // logout here
       this.setState({
         params: "auto",
@@ -101,7 +105,7 @@ class ReduxNavigation extends React.Component{
           showModal: true,
         })
       }, 100)
-    }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
+    }else if(timer > (minutes * 2) && timer <= (minutes * 4)){
       console.log('show modal here')
       this.setState({
         params: "recover",
@@ -116,7 +120,8 @@ class ReduxNavigation extends React.Component{
       BackgroundTimer.stopBackgroundTimer()
       
       this.setState({
-        timer: 0
+        timer: 0,
+        showModal: false
       })
 
       BackgroundTimer.runBackgroundTimer(() => { 
@@ -128,7 +133,7 @@ class ReduxNavigation extends React.Component{
 
   render(){
     const { acceptPayment, user, theme } = this.props.state
-    const { showModal } = this.state;
+    const { showModal, timer, message } = this.state;
     return (
       <View style={{
         flex: 1
@@ -137,7 +142,7 @@ class ReduxNavigation extends React.Component{
       >
         <AppContainer ref={navigationRef}/>
           {
-            showModal && (
+            (showModal && timer > 0 && message != null) && (
               <Modal
                 visible={showModal}
                 animationType={'slide'}
@@ -200,8 +205,14 @@ class ReduxNavigation extends React.Component{
                             showModal: false,
                             timer: 0
                           })
-                          this.props.logout()
-                          navigationRef.current?._navigation.navigate('loginStack')
+                          setTimeout(() => {
+                            this.setState({
+                              showModal: false,
+                              timer: 0
+                            })
+                            this.props.logout()
+                            navigationRef.current?._navigation.navigate('loginStack')
+                          }, 100)
                         }}
                         params={this.state.params}
                         resetInactivityTimeout={() => {
