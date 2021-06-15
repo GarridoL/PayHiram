@@ -17,7 +17,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
-const minutes = 60
+const minutes = 10
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
@@ -76,9 +76,18 @@ class ReduxNavigation extends React.Component{
 
   incrementTime = () => {
     console.log(this.state.timer)
-    this.setState({
-      timer: this.state.timer + 1
-    })
+    const { user } = this.props.state;
+    if(user){
+      this.setState({
+        timer: this.state.timer + 1
+      })  
+    }else{
+      BackgroundTimer.stopBackgroundTimer()
+      this.setState({
+        timer: 0
+      })
+    }
+    
   }
 
   resetInactivityTimeout = () => {
@@ -86,6 +95,10 @@ class ReduxNavigation extends React.Component{
     const { user } = this.props.state;
 
     if(user == null){
+      this.setState({
+        showModal: false,
+        timer: 0
+      })
       return
     }
 
