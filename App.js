@@ -80,9 +80,18 @@ class ReduxNavigation extends React.Component{
 
   incrementTime = () => {
     console.log(this.state.timer)
-    this.setState({
-      timer: this.state.timer + 1
-    })
+    const { user } = this.props.state;
+    if(user){
+      this.setState({
+        timer: this.state.timer + 1
+      })  
+    }else{
+      BackgroundTimer.stopBackgroundTimer()
+      this.setState({
+        timer: 0
+      })
+    }
+    
   }
 
   resetInactivityTimeout = () => {
@@ -90,11 +99,15 @@ class ReduxNavigation extends React.Component{
     const { user } = this.props.state;
 
     if(user == null){
+      this.setState({
+        showModal: false,
+        timer: 0
+      })
       return
     }
 
 
-    if(timer > (minutes * 4)){
+    if(timer > (minutes * 3)){
       // logout here
       this.setState({
         params: "auto",
@@ -105,11 +118,11 @@ class ReduxNavigation extends React.Component{
           showModal: true,
         })
       }, 100)
-    }else if(timer > (minutes * 2) && timer <= (minutes * 4)){
+    }else if(timer > (minutes * 1) && timer <= (minutes * 3)){
       console.log('show modal here')
       this.setState({
         params: "recover",
-        message: "You've have been away for the past " + parseInt(timer / 60) + " minutes. We want to make sure if it still you!",
+        message: "You've have been away for the past " + parseInt(timer / 60) + " minute(s). We want to make sure if it still you!",
       })
       setTimeout(() => {
         this.setState({
@@ -142,7 +155,7 @@ class ReduxNavigation extends React.Component{
       >
         <AppContainer ref={navigationRef}/>
           {
-            (showModal && timer > 0 && message != null) && (
+            (showModal && user) && (
               <Modal
                 visible={showModal}
                 animationType={'slide'}
