@@ -30,10 +30,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string>logo</string>
 			<key>CFBundleURLName</key>
-			<string>PayHiram</string>
+			<string>payhiram</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>https://payhiram.ph</string>
+				<string>payhiram</string>
 			</array>
 		</dict>
 		<dict>
@@ -44,10 +44,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string>logo</string>
 			<key>CFBundleURLName</key>
-			<string>PayHiram</string>
+			<string>payhiram</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>https://admin.payhiram.ph</string>
+				<string>admin.payhiram.ph</string>
 			</array>
 		</dict>
 	</array>
