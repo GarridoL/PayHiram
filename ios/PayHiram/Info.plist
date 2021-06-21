@@ -23,8 +23,6 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.payhiram</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
@@ -37,14 +35,12 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.payhiram</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
 			<string>logo</string>
 			<key>CFBundleURLName</key>
-			<string>payhiram</string>
+			<string>admin.payhiram</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>admin.payhiram.ph</string>

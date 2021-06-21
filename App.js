@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text } from 'react-native';
+import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text, Linking } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -49,6 +49,70 @@ class ReduxNavigation extends React.Component{
       if(response == true){
       }
     })
+
+
+    Linking.getInitialURL().then(url => {
+      this.navigate(url);
+    });
+    Linking.addEventListener('url', this.handleOpenURL);
+  }
+
+
+  onFocusFunction = () => {
+    Linking.getInitialURL().then(url => {
+      this.navigate(url);
+    });
+    Linking.addEventListener('url', this.handleOpenURL);
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+
+  handleOpenURL = (event) => { // D
+    this.navigate(event.url);
+  }
+
+  navigate = (url) => { // E
+    // const { navigate } = this.props.navigation;
+    if(url !== null){
+      const route = url.replace(/.*?:\/\//g, '');
+      const routeName = route.split('/');
+      console.log(routeName)
+      const path = routeName[0]
+
+      switch(path.toLowerCase()){
+        case 'profile':
+          break;
+        case 'reset_password':
+          navigationRef.current?._navigation.navigate('forgotPasswordStack')
+          break;
+        case 'login_verification':
+          if(routeName.length >= 3){
+            navigationRef.current?._navigation.navigate('verifyEmailStack', {
+              username: routeName[1],
+              code: routeName[2]
+            })  
+          }else{
+            console.log('Invalid route')
+          }
+          break
+      }
+      // if(route.split('/')[2] === 'profile') {
+      //   // console.log('/.....2ndIF.......')
+      //   const {setDeepLinkRoute} = this.props;
+      //   setDeepLinkRoute(route);
+      // }else if(route.split('/')[2] === 'reset_password') {
+      //   const {viewChangePass} = this.props;
+      //   viewChangePass(1);
+      //   this.props.navigation.navigate('forgotPasswordStack')
+      // }else if(path === 'login_verification') {
+      //   this.props.navigation.navigate('verifyEmailStack', {
+      //     username: route.split('/')[3],
+      //     code: route.split('/')[4]
+      //   })
+      // }
+    }
   }
 
   getTheme = async () => {
