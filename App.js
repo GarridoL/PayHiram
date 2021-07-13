@@ -17,7 +17,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
-const minutes = 60
+const minutes = 10
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
@@ -160,14 +160,15 @@ class ReduxNavigation extends React.Component{
 
   resetInactivityTimeout = () => {
     const { timer } = this.state;
-    const { user } = this.props.state;
+    const { user, activityModal } = this.props.state;
+    const { setActivityModal } = this.props;
 
     if(user == null){
       BackgroundTimer.stopBackgroundTimer()
       this.setState({
-        showModal: false,
         timer: 0
       })
+      setActivityModal(false)
       return
     }
 
@@ -178,30 +179,21 @@ class ReduxNavigation extends React.Component{
         params: "auto",
         message: "You've been away for the past " + parseInt(timer / 60) + " minutes. For your security, kindly login again."
       })
-      setTimeout(() => {
-        this.setState({
-          showModal: true,
-        })
-      }, 100)
+
     }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
       console.log('show modal here')
       this.setState({
         params: "recover",
         message: "You've have been away for the past " + parseInt(timer / 60) + " minute(s). We want to make sure if it still you!",
       })
-      setTimeout(() => {
-        this.setState({
-          showModal: true,
-        })
-      }, 100)
+      setActivityModal(true)
     }else{
       if(timer > 0){
         BackgroundTimer.stopBackgroundTimer()
       }
       
       this.setState({
-        timer: 0,
-        showModal: false
+        timer: 0
       })
 
       if(timer == 0){
@@ -214,8 +206,11 @@ class ReduxNavigation extends React.Component{
   }
 
   render(){
-    const { acceptPayment, user, theme } = this.props.state
+    const { acceptPayment, user, theme, activityModal } = this.props.state
     const { showModal, timer, message } = this.state;
+    console.log({
+      activityModal
+    })
     return (
       <View style={{
         flex: 1
@@ -224,9 +219,9 @@ class ReduxNavigation extends React.Component{
       >
         <AppContainer ref={navigationRef}/>
           {
-            (showModal && user) && (
+            (activityModal && user) && (
               <Modal
-                visible={showModal}
+                visible={activityModal}
                 animationType={'slide'}
                 transparent={true}>
                 <View style={{
@@ -284,14 +279,15 @@ class ReduxNavigation extends React.Component{
                       <ModalFooter
                         reset={() => {
                           this.setState({
-                            showModal: false,
                             timer: 0
                           })
                           this.props.logout()
                           BackgroundTimer.stopBackgroundTimer()
+
+                          const { setActivityModal } = this.props;
+                          setActivityModal(false)
                           setTimeout(() => {
                             this.setState({
-                              showModal: false,
                               timer: 0
                             })
                             navigationRef.current?._navigation.navigate('loginStack')
@@ -299,8 +295,9 @@ class ReduxNavigation extends React.Component{
                         }}
                         params={this.state.params}
                         resetInactivityTimeout={() => {
+                          const { setActivityModal } = this.props;
+                          setActivityModal(false)
                           this.setState({
-                            showModal: false,
                             timer: 0
                           })
                           setTimeout(() => {
@@ -326,6 +323,7 @@ const mapDispatchToProps = dispatch => {
     setUnReadMessages: (messages) => dispatch(actions.setUnReadMessages(messages)),
     updateMessagesOnGroup: (message) => dispatch(actions.updateMessagesOnGroup(message)),
     logout: () => dispatch(actions.logout()),
+    setActivityModal: (flag) => dispatch(actions.setActivityModal(flag)),
     setActiveRoute: (route) => dispatch(actions.setActiveRoute(route))
   };
 };
