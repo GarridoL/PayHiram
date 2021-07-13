@@ -172,7 +172,7 @@ class ReduxNavigation extends React.Component{
     }
 
 
-    if(timer > (minutes * 3)){
+    if(timer > (minutes * 5)){
       // logout here
       this.setState({
         params: "auto",
@@ -183,7 +183,7 @@ class ReduxNavigation extends React.Component{
           showModal: true,
         })
       }, 100)
-    }else if(timer > (minutes * 1) && timer <= (minutes * 3)){
+    }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
       console.log('show modal here')
       this.setState({
         params: "recover",
