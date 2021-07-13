@@ -179,6 +179,7 @@ class ReduxNavigation extends React.Component{
         params: "auto",
         message: "You've been away for the past " + parseInt(timer / 60) + " minutes. For your security, kindly login again."
       })
+      setActivityModal(true)
 
     }else if(timer > (minutes * 3) && timer <= (minutes * 5)){
       console.log('show modal here')
@@ -196,6 +197,8 @@ class ReduxNavigation extends React.Component{
         timer: 0
       })
 
+      setActivityModal(false)
+
       if(timer == 0){
         BackgroundTimer.runBackgroundTimer(() => { 
           this.incrementTime() 
@@ -208,9 +211,6 @@ class ReduxNavigation extends React.Component{
   render(){
     const { acceptPayment, user, theme, activityModal } = this.props.state
     const { showModal, timer, message } = this.state;
-    console.log({
-      activityModal
-    })
     return (
       <View style={{
         flex: 1
