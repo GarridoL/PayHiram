@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text, Linking } from 'react-native';
+import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -31,7 +31,8 @@ class ReduxNavigation extends React.Component{
       interval: null,
       showModal: false,
       message: null,
-      params: "recover"
+      params: "recover",
+      flagModal: false
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
@@ -234,15 +235,30 @@ class ReduxNavigation extends React.Component{
       status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
     }
     this.setState({isLoading: true})
+    console.log({
+      parameters
+    })
     Api.request(Routes.deviceCreate, parameters, response => {
       this.setState({isLoading: false})
       console.log('[primary_response]', response)
+      this.setState({
+        flagModal: true
+      })
       if(response.data > 0){
-        const { updateUser } = this.props;
-        updateUser({
-          ...user,
-          devive_info: myDevice
-        })
+        Alert.alert(
+          'Message',
+          'Successfully Added! To proceed please login again.',
+          [
+            {text: 'Ok', onPress: () => {
+              const { logout } = this.props;
+              logout()
+              setTimeout(() => {
+                navigationRef.current?._navigation.navigate('loginStack')
+              }, 100)
+            }, style: 'cancel'}
+          ],
+          { cancelable: false }
+        )
       }else{
         Alert.alert(
           'Message',
@@ -352,6 +368,7 @@ class ReduxNavigation extends React.Component{
   
   render(){
     const { user, activityModal, myDevice } = this.props.state
+    const { flagModal } = this.state;
     return (
       <View style={{
         flex: 1
@@ -365,13 +382,24 @@ class ReduxNavigation extends React.Component{
           )
         }
         {
-          (user && user.device_info == null && myDevice) && (
+          (user && user.device_info == null && myDevice && flagModal == false) && (
             <AuthorizedModal
-            showModal={true}
+            showModal={flagModal ? false : true}
             title={"Use this device as your primary device and receive security notifications once there's an activity of your account while not allowing other device to login unless authorized."}
             auths={true}
             authorize={() => {this.authorize()}}
             ></AuthorizedModal>
+          )
+        }
+        {
+          (user && myDevice && user.device_info && user.device_info.indexOf(myDevice.unique_code) < 0 && flagModal == false) && (
+            <AuthorizedModal
+            showModal={flagModal ? false : true}
+            title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
+            secondary={true}
+            authorized={() => {this.authorize()}}
+            navigation={this.props.navigation}
+            />
           )
         }
       </View>
