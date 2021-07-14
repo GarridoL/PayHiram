@@ -21,7 +21,7 @@ import DeviceInfo from 'react-native-device-info';
 import AuthorizedModal from 'modules/generic/AuthorizedModal';
 import Api from 'services/api'
 
-const minutes = 10
+const minutes = 60
 class ReduxNavigation extends React.Component{
   constructor(props) {
     super(props);
