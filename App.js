@@ -208,6 +208,99 @@ class ReduxNavigation extends React.Component{
     
   }
 
+  renderModalActivity(){
+    const { activityModal } = this.props.state;
+    return(
+      <Modal
+      visible={activityModal}
+      animationType={'slide'}
+      transparent={true}>
+      <View style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        flex: 1
+      }}>
+        <View style={{
+          minHeight: 100,
+          paddingLeft: 10,
+          paddingRight: 10,
+          paddingTop: 20,
+          paddingBottom: 20,
+          borderRadius: 12,
+          width: '80%',
+          marginRight: '10%',
+          marginLeft: '10%',
+          backgroundColor: 'white'
+        }}>
+
+            {
+              /*Action buttons*/
+            }
+
+            <View style={{
+              width: '100%',
+              alignItems: 'center'
+            }}>
+              <FontAwesomeIcon icon={faExclamationTriangle} size={50} color={Color.danger}/>
+            </View>
+
+            <Text style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              paddingTop: 10,
+              textAlign: 'center',
+            }}>
+              Security Alert!
+            </Text>
+
+            <Text style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              paddingTop: 50,
+              paddingBottom: 50,
+              textAlign: 'center',
+              paddingLeft: 20,
+              paddingRight: 20,
+              color: Color.danger
+            }}>
+              {this.state.message}
+            </Text>
+
+            <ModalFooter
+              reset={() => {
+                this.setState({
+                  timer: 0
+                })
+                this.props.logout()
+                BackgroundTimer.stopBackgroundTimer()
+
+                const { setActivityModal } = this.props;
+                setActivityModal(false)
+                setTimeout(() => {
+                  this.setState({
+                    timer: 0
+                  })
+                  navigationRef.current?._navigation.navigate('loginStack')
+                }, 100)
+              }}
+              params={this.state.params}
+              resetInactivityTimeout={() => {
+                const { setActivityModal } = this.props;
+                setActivityModal(false)
+                this.setState({
+                  timer: 0
+                })
+                setTimeout(() => {
+                  this.resetInactivityTimeout()
+                }, 100)
+              }}/>
+        </View>
+      </View>
+
+    </Modal>
+    )
+  }
   render(){
     const { acceptPayment, user, theme, activityModal } = this.props.state
     const { showModal, timer, message } = this.state;
@@ -218,98 +311,11 @@ class ReduxNavigation extends React.Component{
       {...this.panResponder.panHandlers}
       >
         <AppContainer ref={navigationRef}/>
-          {
-            (activityModal && user) && (
-              <Modal
-                visible={activityModal}
-                animationType={'slide'}
-                transparent={true}>
-                <View style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  flex: 1
-                }}>
-                  <View style={{
-                    minHeight: 100,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    paddingTop: 20,
-                    paddingBottom: 20,
-                    borderRadius: 12,
-                    width: '80%',
-                    marginRight: '10%',
-                    marginLeft: '10%',
-                    backgroundColor: 'white'
-                  }}>
-
-                      {
-                        /*Action buttons*/
-                      }
-
-                      <View style={{
-                        width: '100%',
-                        alignItems: 'center'
-                      }}>
-                        <FontAwesomeIcon icon={faExclamationTriangle} size={50} color={Color.danger}/>
-                      </View>
-
-                      <Text style={{
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                        paddingTop: 10,
-                        textAlign: 'center',
-                      }}>
-                        Security Alert!
-                      </Text>
-
-                      <Text style={{
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        paddingTop: 50,
-                        paddingBottom: 50,
-                        textAlign: 'center',
-                        paddingLeft: 20,
-                        paddingRight: 20,
-                        color: Color.danger
-                      }}>
-                        {this.state.message}
-                      </Text>
-
-                      <ModalFooter
-                        reset={() => {
-                          this.setState({
-                            timer: 0
-                          })
-                          this.props.logout()
-                          BackgroundTimer.stopBackgroundTimer()
-
-                          const { setActivityModal } = this.props;
-                          setActivityModal(false)
-                          setTimeout(() => {
-                            this.setState({
-                              timer: 0
-                            })
-                            navigationRef.current?._navigation.navigate('loginStack')
-                          }, 100)
-                        }}
-                        params={this.state.params}
-                        resetInactivityTimeout={() => {
-                          const { setActivityModal } = this.props;
-                          setActivityModal(false)
-                          this.setState({
-                            timer: 0
-                          })
-                          setTimeout(() => {
-                            this.resetInactivityTimeout()
-                          }, 100)
-                        }}/>
-                  </View>
-                </View>
-
-              </Modal>
-            )
-          }
+        {
+          (activityModal && user) && (
+            this.renderModalActivity()           
+          )
+        }
       </View>
     )
   }
