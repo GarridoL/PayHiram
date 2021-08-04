@@ -37,7 +37,7 @@ class ReduxNavigation extends React.Component{
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
         // console.log('user starts touch');
-        this.resetInactivityTimeout()
+        // this.resetInactivityTimeout()
       },
     })
   }
