@@ -226,50 +226,80 @@ class ReduxNavigation extends React.Component{
     const { user, myDevice } = this.props.state;
     if(user == null || myDevice == null){
       return
-    }
-    let parameters = {
-      account_id: user.id,
-      model: myDevice.model,
-      unique_code: myDevice.unique_code,
-      details: JSON.stringify(myDevice.details),
-      status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
-    }
-    this.setState({isLoading: true})
-    console.log({
-      parameters
-    })
-    Api.request(Routes.deviceCreate, parameters, response => {
-      this.setState({isLoading: false})
-      console.log('[primary_response]', response)
-      this.setState({
-        flagModal: true
-      })
-      if(response.data > 0){
-        Alert.alert(
-          'Message',
-          'Successfully Added! To proceed please login again.',
-          [
-            {text: 'Ok', onPress: () => {
-              const { logout } = this.props;
-              logout()
-              setTimeout(() => {
-                navigationRef.current?._navigation.navigate('loginStack')
-              }, 100)
-            }, style: 'cancel'}
-          ],
-          { cancelable: false }
-        )
-      }else{
-        Alert.alert(
-          'Message',
-          'Please try Again!',
-          [
-            {text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel'}
-          ],
-          { cancelable: false }
-        )
+    } 
+    if (user.device_info == null) {
+      let parameters = {
+        account_id: user.id,
+        model: myDevice.model,
+        unique_code: myDevice.unique_code,
+        details: JSON.stringify(myDevice.details),
+        status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
       }
-    })
+      this.setState({isLoading: true})
+      console.log({
+        parameters
+      })
+      Api.request(Routes.deviceCreate, parameters, response => {
+        this.setState({isLoading: false})
+        console.log('[primary_response]', response)
+        this.setState({
+          flagModal: true
+        })
+        if(response.data > 0){
+          Alert.alert(
+            'Message',
+            'Successfully Added! To proceed please login again.',
+            [
+              {text: 'Ok', onPress: () => {
+                const { logout } = this.props;
+                logout()
+                setTimeout(() => {
+                  navigationRef.current?._navigation.navigate('loginStack')
+                }, 100)
+              }, style: 'cancel'}
+            ],
+            { cancelable: false }
+          )
+        }else{
+          Alert.alert(
+            'Message',
+            'Please try Again!',
+            [
+              {text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel'}
+            ],
+            { cancelable: false }
+          )
+        }
+      })
+    }else{
+      // let parameter = {
+      //   account_id: user.id,
+      //   model: model,
+      //   unique_code: uniqueId,
+      //   details: JSON.stringify({ manufacturer: this.state.manufacturers, os: Platform.OS, deviceId: deviceId }),
+      //   status: 'secondary'
+      // }
+      // console.log('[secondary_parameter]', parameter)
+      // Api.request(Routes.deviceCreate, parameter, response => {
+      //   console.log('[secondary_response]', response)
+      //   if (response.data > 0) {
+      //     this.setState({ AuthShowModal: false })
+      //     this.setState({ SecShowModal: false })
+      //     this.setState({ showModals: false })
+      //   } else {
+      //     Alert.alert(
+      //       'Message',
+      //       'Please try Again!',
+      //       [
+      //         { text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel' }
+      //       ],
+      //       { cancelable: false }
+      //     )
+      //   }
+      // }, error => {
+      //   console.log('[device errors: ]', error)
+      // })
+    }
   }
 
   renderModalActivity(){
