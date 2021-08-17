@@ -32,12 +32,13 @@ class ReduxNavigation extends React.Component{
       showModal: false,
       message: null,
       params: "recover",
-      flagModal: false
+      flagModal: false,
+      showModals: false
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
         // console.log('user starts touch');
-        // this.resetInactivityTimeout()
+        this.resetInactivityTimeout()
       },
     })
   }
@@ -222,84 +223,84 @@ class ReduxNavigation extends React.Component{
     
   }
 
+  back = () => {
+    this.setState({ showModals: false })
+    this.setState({ flagModal: false })
+  }
+
+
+  generateOtp = () => {
+    const { user, myDevice } = this.props.state;
+    if (user == null) {
+      return
+    }
+    let parameters = {
+      account_id: user.id,
+      unique_code: user.device_info[0],
+      curr_unique_id: myDevice.unique_code,
+      curr_device_id: myDevice.details.deviceId,
+      curr_model: myDevice.model
+    };
+    console.log('[parameter]', parameters)
+    this.setState({ isLoading: true })
+    Api.request(
+      Routes.notificationSettingDeviceOtp,
+      parameters,
+      (data) => {
+        this.setState({ isLoading: false })
+        console.log('[data]', data)
+      },
+      (error) => {
+        console.log('[Errora]', error)
+        this.setState({ isLoading: false })
+      },
+    );
+  }
+
   authorize = () => {
     const { user, myDevice } = this.props.state;
     if(user == null || myDevice == null){
       return
-    } 
-    if (user.device_info == null) {
-      let parameters = {
-        account_id: user.id,
-        model: myDevice.model,
-        unique_code: myDevice.unique_code,
-        details: JSON.stringify(myDevice.details),
-        status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
-      }
-      this.setState({isLoading: true})
-      console.log({
-        parameters
-      })
-      Api.request(Routes.deviceCreate, parameters, response => {
-        this.setState({isLoading: false})
-        console.log('[primary_response]', response)
-        this.setState({
-          flagModal: true
-        })
-        if(response.data > 0){
-          Alert.alert(
-            'Message',
-            'Successfully Added! To proceed please login again.',
-            [
-              {text: 'Ok', onPress: () => {
-                const { logout } = this.props;
-                logout()
-                setTimeout(() => {
-                  navigationRef.current?._navigation.navigate('loginStack')
-                }, 100)
-              }, style: 'cancel'}
-            ],
-            { cancelable: false }
-          )
-        }else{
-          Alert.alert(
-            'Message',
-            'Please try Again!',
-            [
-              {text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel'}
-            ],
-            { cancelable: false }
-          )
-        }
-      })
-    }else{
-      // let parameter = {
-      //   account_id: user.id,
-      //   model: model,
-      //   unique_code: uniqueId,
-      //   details: JSON.stringify({ manufacturer: this.state.manufacturers, os: Platform.OS, deviceId: deviceId }),
-      //   status: 'secondary'
-      // }
-      // console.log('[secondary_parameter]', parameter)
-      // Api.request(Routes.deviceCreate, parameter, response => {
-      //   console.log('[secondary_response]', response)
-      //   if (response.data > 0) {
-      //     this.setState({ AuthShowModal: false })
-      //     this.setState({ SecShowModal: false })
-      //     this.setState({ showModals: false })
-      //   } else {
-      //     Alert.alert(
-      //       'Message',
-      //       'Please try Again!',
-      //       [
-      //         { text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel' }
-      //       ],
-      //       { cancelable: false }
-      //     )
-      //   }
-      // }, error => {
-      //   console.log('[device errors: ]', error)
-      // })
     }
+    let parameters = {
+      account_id: user.id,
+      model: myDevice.model,
+      unique_code: myDevice.unique_code,
+      details: JSON.stringify(myDevice.details),
+      status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
+    }
+    this.setState({isLoading: true})
+    Api.request(Routes.deviceCreate, parameters, response => {
+      this.setState({isLoading: false})
+      this.setState({
+        flagModal: true
+      })
+      if(response.data > 0){
+        Alert.alert(
+          'Message',
+          'Successfully Added! To proceed please login again.',
+          [
+            {text: 'Ok', onPress: () => {
+              const { logout } = this.props;
+              logout()
+              setTimeout(() => {
+                navigationRef.current?._navigation.navigate('loginStack')
+              }, 100)
+            }, style: 'cancel'}
+          ],
+          { cancelable: false }
+        )
+      }else{
+        Alert.alert(
+          'Message',
+          'Please try Again!',
+          [
+            {text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel'}
+          ],
+          { cancelable: false }
+        )
+      }
+    })
   }
 
   renderModalActivity(){
@@ -398,7 +399,7 @@ class ReduxNavigation extends React.Component{
   
   render(){
     const { user, activityModal, myDevice } = this.props.state
-    const { flagModal } = this.state;
+    const { flagModal, showModals } = this.state;
     return (
       <View style={{
         flex: 1
@@ -427,10 +428,21 @@ class ReduxNavigation extends React.Component{
             showModal={flagModal ? false : true}
             title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
             secondary={true}
-            authorized={() => {this.authorize()}}
+            authorized={() => this.generateOtp()}
             navigation={this.props.navigation}
             />
           )
+        }
+        {
+          (user && myDevice && user.device_info && user.device_info.indexOf(myDevice.unique_code) < 0 && flagModal == false && showModals) && (
+            <AuthorizedModal
+            showModals={showModals}
+            title={"Check your notifications, we have sent you a code to your primary device, please enter it below and press 'Verify'."}
+            back={() => {this.back()}}
+            authorize={() => {this.authorize()}}
+            />
+          )
+       
         }
       </View>
     )
