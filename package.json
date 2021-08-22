@@ -56,6 +56,7 @@
     "react-native-camera": "^3.21.0",
     "react-native-credit-card-input": "^0.4.1",
     "react-native-device-info": "^5.5.3",
+    "react-native-disable-screenshot": "^1.0.0",
     "react-native-draggable-view": "0.0.6",
     "react-native-elements": "^2.3.2",
     "react-native-fingerprint-scanner": "^6.0.0",
