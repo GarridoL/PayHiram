@@ -9,6 +9,7 @@ buildscript {
         kotlinVersion = "1.3.72"
         googlePlayServicesVersion = "11.8.0"
         gradle3EXPERIMENTAL = "yes"
+        androidXCore = "1.6.0"
     }
     repositories {
         google()
