@@ -269,6 +269,7 @@ class ReduxNavigation extends React.Component{
       details: JSON.stringify(myDevice.details),
       status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
     }
+    console.log('[hello]')
     this.setState({isLoading: true})
     Api.request(Routes.deviceCreate, parameters, response => {
       this.setState({isLoading: false})
