@@ -38,7 +38,7 @@ class ReduxNavigation extends React.Component{
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
         // console.log('user starts touch');
-        this.resetInactivityTimeout()
+        // this.resetInactivityTimeout()
       },
     })
   }
@@ -220,42 +220,29 @@ class ReduxNavigation extends React.Component{
         }, 1000);
       }
     }
-    
   }
 
-  back = () => {
-    this.setState({ showModals: false })
-    this.setState({ flagModal: false })
-  }
-
-
-  generateOtp = () => {
+  addSecondaryDevice = () => {
     const { user, myDevice } = this.props.state;
-    if (user == null) {
+    if(user == null || myDevice == null){
       return
     }
     let parameters = {
       account_id: user.id,
-      unique_code: user.device_info[0],
-      curr_unique_id: myDevice.unique_code,
-      curr_device_id: myDevice.details.deviceId,
-      curr_model: myDevice.model
-    };
-    console.log('[parameter]', parameters)
-    this.setState({ isLoading: true })
-    Api.request(
-      Routes.notificationSettingDeviceOtp,
-      parameters,
-      (data) => {
-        this.setState({ isLoading: false })
-        console.log('[data]', data)
-      },
-      (error) => {
-        console.log('[Errora]', error)
-        this.setState({ isLoading: false })
-      },
-    );
-  }
+      model: myDevice.model,
+      unique_code: myDevice.unique_code,
+      details: JSON.stringify(myDevice.details),
+      status: 'secondary'
+    }
+    console.log('[Create Second Device] Create parameters', parameters)
+    this.setState({ flagModal: true })
+    navigationRef.current?._navigation.navigate('otpStack', {
+      data: {
+        payload: 'addToDevice',
+        data: parameters
+      }
+    });
+  };
 
   authorize = () => {
     const { user, myDevice } = this.props.state;
@@ -267,7 +254,8 @@ class ReduxNavigation extends React.Component{
       model: myDevice.model,
       unique_code: myDevice.unique_code,
       details: JSON.stringify(myDevice.details),
-      status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
+      status: 'primary'
+      // status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
     }
     this.setState({isLoading: true})
     Api.request(Routes.deviceCreate, parameters, response => {
@@ -409,7 +397,7 @@ class ReduxNavigation extends React.Component{
         <AppContainer ref={navigationRef}/>
         {
           (activityModal && user) && (
-            this.renderModalActivity()           
+            this.renderModalActivity()
           )
         }
         {
@@ -428,12 +416,12 @@ class ReduxNavigation extends React.Component{
             showModal={flagModal ? false : true}
             title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
             secondary={true}
-            authorized={() => this.generateOtp()}
+            authorized={() => this.addSecondaryDevice()}
             navigation={this.props.navigation}
             />
           )
         }
-        {
+        {/* {
           (user && myDevice && user.device_info && user.device_info.indexOf(myDevice.unique_code) < 0 && flagModal == false && showModals) && (
             <AuthorizedModal
             showModals={showModals}
@@ -443,7 +431,7 @@ class ReduxNavigation extends React.Component{
             />
           )
        
-        }
+        } */}
       </View>
     )
   }
