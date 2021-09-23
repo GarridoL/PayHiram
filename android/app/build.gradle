@@ -160,6 +160,14 @@ android {
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
         }
+        huawei {
+            if (project.hasProperty('HUAWEI_UPLOAD_STORE_FILE')) {
+                storeFile file(HUAWEI_UPLOAD_STORE_FILE)
+                storePassword HUAWEI_UPLOAD_STORE_PASSWORD
+                keyAlias HUAWEI_UPLOAD_KEY_ALIAS
+                keyPassword HUAWEI_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -168,7 +176,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.huawei
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
