@@ -19,6 +19,7 @@ import { Color, BasicStyles, Routes } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
 import DeviceInfo from 'react-native-device-info';
 import AuthorizedModal from 'modules/generic/AuthorizedModal';
+import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
 import Api from 'services/api'
 
 const minutes = 60
@@ -255,7 +256,6 @@ class ReduxNavigation extends React.Component{
       unique_code: myDevice.unique_code,
       details: JSON.stringify(myDevice.details),
       status: 'primary'
-      // status: user.device_info && user.device_info.length > 0 ? 'secondary' : 'primary'
     }
     this.setState({isLoading: true})
     Api.request(Routes.deviceCreate, parameters, response => {
@@ -386,7 +386,7 @@ class ReduxNavigation extends React.Component{
   }
   
   render(){
-    const { user, activityModal, myDevice } = this.props.state
+    const { user, activityModal, myDevice, deviceNotification } = this.props.state
     const { flagModal, showModals } = this.state;
     return (
       <View style={{
@@ -401,7 +401,7 @@ class ReduxNavigation extends React.Component{
           )
         }
         {
-          (user && user.device_info == null && myDevice && flagModal == false) && (
+          (user && user.devices == null && myDevice && flagModal == false) && (
             <AuthorizedModal
             showModal={flagModal ? false : true}
             title={"Use this device as your primary device and receive security notifications once there's an activity of your account while not allowing other device to login unless authorized."}
@@ -411,7 +411,7 @@ class ReduxNavigation extends React.Component{
           )
         }
         {
-          (user && myDevice && user.device_info && user.device_info.indexOf(myDevice.unique_code) < 0 && flagModal == false) && (
+          (user && myDevice && user.devices && user.devices.indexOf(myDevice.unique_code) < 0 && flagModal == false) && (
             <AuthorizedModal
             showModal={flagModal ? false : true}
             title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
@@ -421,8 +421,20 @@ class ReduxNavigation extends React.Component{
             />
           )
         }
+        {
+          (deviceNotification) && (
+            <AuthorizedModal
+              showModal={deviceNotification ? false : true}
+              close={() => {
+                const { showDeviceNotification } = this.props;
+                showDeviceNotification(null)
+              }}
+              navigation={this.props.navigation}
+            />
+          )
+        }
         {/* {
-          (user && myDevice && user.device_info && user.device_info.indexOf(myDevice.unique_code) < 0 && flagModal == false && showModals) && (
+          (user && myDevice && user.devices && user.devices.indexOf(myDevice.unique_code) < 0 && flagModal == false && showModals) && (
             <AuthorizedModal
             showModals={showModals}
             title={"Check your notifications, we have sent you a code to your primary device, please enter it below and press 'Verify'."}
@@ -448,7 +460,8 @@ const mapDispatchToProps = dispatch => {
     setActivityModal: (flag) => dispatch(actions.setActivityModal(flag)),
     setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
     setMyDevice: (device) => dispatch(actions.setMyDevice(device)),
-    updateUser: (user) => dispatch(actions.updateUser(user))
+    updateUser: (user) => dispatch(actions.updateUser(user)),
+    showDeviceNotification: (deviceNotification) => dispatch(actions.showDeviceNotification(deviceNotification))
   };
 };
 let AppReduxNavigation = connect(mapStateToProps, mapDispatchToProps)(ReduxNavigation)
