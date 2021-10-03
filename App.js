@@ -423,7 +423,7 @@ class ReduxNavigation extends React.Component{
         {
           (deviceNotification) && (
             <DeviceNotificationModal
-              showModal={deviceNotification ? false : true}
+              showModal={deviceNotification ? true : false}
               close={() => {
                 const { showDeviceNotification } = this.props;
                 showDeviceNotification(null)
