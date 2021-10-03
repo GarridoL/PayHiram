@@ -235,7 +235,6 @@ class ReduxNavigation extends React.Component{
       details: JSON.stringify(myDevice.details),
       status: 'secondary'
     }
-    console.log('[Create Second Device] Create parameters', parameters)
     this.setState({ flagModal: true })
     navigationRef.current?._navigation.navigate('otpStack', {
       data: {
@@ -423,7 +422,7 @@ class ReduxNavigation extends React.Component{
         }
         {
           (deviceNotification) && (
-            <AuthorizedModal
+            <DeviceNotificationModal
               showModal={deviceNotification ? false : true}
               close={() => {
                 const { showDeviceNotification } = this.props;
