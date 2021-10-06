@@ -16,7 +16,7 @@ import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color, BasicStyles, Routes } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
 import DeviceInfo from 'react-native-device-info';
-import AuthorizedModal from 'modules/generic/AuthorizedModal';
+import CheckDevice from 'modules/checkDevice/Drawer.js';
 import Button from 'components/Form/Button';
 import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
 import Api from 'services/api'
@@ -64,6 +64,7 @@ class ReduxNavigation extends React.Component{
         manufacturer: DeviceInfo.getManufacturer()
       }
     })
+    console.log('[user]', this.props.state.user)
 
     Linking.getInitialURL().then(url => {
       this.navigate(url);
@@ -398,15 +399,15 @@ class ReduxNavigation extends React.Component{
         }
         {
           (user && user.devices == null && myDevice && flagModal == false) && (
-            <AuthorizedModal
+            <CheckDevice
             showModal={flagModal ? false : true}
             title={"Use this device as your primary device and receive security notifications once there's an activity of your account while not allowing other device to login unless authorized."}
             auths={true}
             authorize={() => {this.authorize()}}
-            ></AuthorizedModal>
+            ></CheckDevice>
           )
         }
-        {
+        {/* {
           (user && myDevice && user.devices && user.devices.indexOf((myDevice.unique_code === null ? DeviceInfo.getUniqueId() : myDevice.unique_code)) < 0 && flagModal == false) && (
             <AuthorizedModal
             showModal={flagModal ? false : true}
@@ -416,7 +417,7 @@ class ReduxNavigation extends React.Component{
             navigation={this.props.navigation}
             />
           )
-        }
+        } */}
         {
           (deviceNotification) && (
             <DeviceNotificationModal
