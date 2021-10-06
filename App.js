@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
+import { View, ActivityIndicator, PanResponder, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -9,8 +9,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
 import SystemVersion from 'services/System.js';
 const AppContainer = createAppContainer(AppNavigation);
-const height = Math.round(Dimensions.get('window').height);
-const width = Math.round(Dimensions.get('window').width);
 import BackgroundTimer from 'react-native-background-timer';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +17,7 @@ import { Color, BasicStyles, Routes } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
 import DeviceInfo from 'react-native-device-info';
 import AuthorizedModal from 'modules/generic/AuthorizedModal';
+import Button from 'components/Form/Button';
 import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
 import Api from 'services/api'
 
@@ -56,13 +55,6 @@ class ReduxNavigation extends React.Component{
       if(response == true){
       }
     })
-
-
-    Linking.getInitialURL().then(url => {
-      this.navigate(url);
-    });
-    Linking.addEventListener('url', this.handleOpenURL);
-
     const { setMyDevice } = this.props;
     setMyDevice({
       unique_code: DeviceInfo.getUniqueId(),
@@ -72,6 +64,11 @@ class ReduxNavigation extends React.Component{
         manufacturer: DeviceInfo.getManufacturer()
       }
     })
+
+    Linking.getInitialURL().then(url => {
+      this.navigate(url);
+    });
+    Linking.addEventListener('url', this.handleOpenURL);
   }
 
   onFocusFunction = () => {
@@ -231,7 +228,7 @@ class ReduxNavigation extends React.Component{
     let parameters = {
       account_id: user.id,
       model: myDevice.model,
-      unique_code: myDevice.unique_code,
+      unique_code: (myDevice != null ? myDevice.unique_code : DeviceInfo.getUniqueId()),
       details: JSON.stringify(myDevice.details),
       status: 'secondary'
     }
@@ -252,7 +249,7 @@ class ReduxNavigation extends React.Component{
     let parameters = {
       account_id: user.id,
       model: myDevice.model,
-      unique_code: myDevice.unique_code,
+      unique_code: (myDevice != null ? myDevice.unique_code : DeviceInfo.getUniqueId()),
       details: JSON.stringify(myDevice.details),
       status: 'primary'
     }
@@ -410,7 +407,7 @@ class ReduxNavigation extends React.Component{
           )
         }
         {
-          (user && myDevice && user.devices && user.devices.indexOf(myDevice.unique_code) < 0 && flagModal == false) && (
+          (user && myDevice && user.devices && user.devices.indexOf((myDevice.unique_code === null ? DeviceInfo.getUniqueId() : myDevice.unique_code)) < 0 && flagModal == false) && (
             <AuthorizedModal
             showModal={flagModal ? false : true}
             title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
