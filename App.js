@@ -407,9 +407,9 @@ class ReduxNavigation extends React.Component{
             ></CheckDevice>
           )
         }
-        {/* {
+        {
           (user && myDevice && user.devices && user.devices.indexOf((myDevice.unique_code === null ? DeviceInfo.getUniqueId() : myDevice.unique_code)) < 0 && flagModal == false) && (
-            <AuthorizedModal
+            <CheckDevice
             showModal={flagModal ? false : true}
             title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
             secondary={true}
@@ -417,7 +417,7 @@ class ReduxNavigation extends React.Component{
             navigation={this.props.navigation}
             />
           )
-        } */}
+        }
         {
           (deviceNotification) && (
             <DeviceNotificationModal
