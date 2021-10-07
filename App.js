@@ -138,6 +138,9 @@ class ReduxNavigation extends React.Component{
       const tertiary = await AsyncStorage.getItem(Helper.APP_NAME + 'tertiary');
       const fourth = await AsyncStorage.getItem(Helper.APP_NAME + 'fourth');
       const index = await AsyncStorage.getItem(Helper.APP_NAME + 'index');
+      console.log({
+        index: index
+      })
       if(primary != null && secondary != null && tertiary != null) {
         const { setTheme } = this.props;
         setTheme({
@@ -145,7 +148,7 @@ class ReduxNavigation extends React.Component{
           secondary: secondary,
           tertiary: tertiary,
           fourth: fourth,
-          index: index
+          index: parseInt(index)
         })
       }
     } catch (e) {
@@ -400,27 +403,6 @@ class ReduxNavigation extends React.Component{
           )
         }
         {
-          (user && user.devices == null && myDevice && flagModal == false) && (
-            <AuthorizedModal
-            showModal={flagModal ? false : true}
-            title={"Use this device as your primary device and receive security notifications once there's an activity of your account while not allowing other device to login unless authorized."}
-            auths={true}
-            authorize={() => {this.authorize()}}
-            ></AuthorizedModal>
-          )
-        }
-        {
-          (user && myDevice && user.devices && user.devices.indexOf(myDevice.unique_code) < 0 && flagModal == false) && (
-            <AuthorizedModal
-            showModal={flagModal ? false : true}
-            title={"You are seeing this because you are logging in to another device for the first time or you have reached the maximum number of trusted devices that can be added. Click 'Authorize' button to link this device."}
-            secondary={true}
-            authorized={() => this.addSecondaryDevice()}
-            navigation={this.props.navigation}
-            />
-          )
-        }
-        {
           (deviceNotification) && (
             <DeviceNotificationModal
               showModal={deviceNotification ? true : false}
@@ -432,17 +414,6 @@ class ReduxNavigation extends React.Component{
             />
           )
         }
-        {/* {
-          (user && myDevice && user.devices && user.devices.indexOf(myDevice.unique_code) < 0 && flagModal == false && showModals) && (
-            <AuthorizedModal
-            showModals={showModals}
-            title={"Check your notifications, we have sent you a code to your primary device, please enter it below and press 'Verify'."}
-            back={() => {this.back()}}
-            authorize={() => {this.authorize()}}
-            />
-          )
-       
-        } */}
       </View>
     )
   }
