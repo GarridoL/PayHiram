@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, PanResponder, Platform, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
+import { View, ActivityIndicator, PanResponder, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -9,18 +9,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Helper } from 'common';
 import SystemVersion from 'services/System.js';
 const AppContainer = createAppContainer(AppNavigation);
-const height = Math.round(Dimensions.get('window').height);
-const width = Math.round(Dimensions.get('window').width);
 import BackgroundTimer from 'react-native-background-timer';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
-import { Color, BasicStyles, Routes } from 'common'
+import { Color } from 'common'
 import { navigationRef } from 'modules/generic/SecurityAlert';
-import DeviceInfo from 'react-native-device-info';
-import AuthorizedModal from 'modules/generic/AuthorizedModal';
-import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
-import Api from 'services/api'
 
 const minutes = 60
 class ReduxNavigation extends React.Component{
@@ -30,11 +24,8 @@ class ReduxNavigation extends React.Component{
       timer: 0,
       timeForInactivityInSecond: 1,
       interval: null,
-      showModal: false,
       message: null,
-      params: "recover",
-      flagModal: false,
-      showModals: false
+      params: "recover"
     }
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => {
@@ -47,31 +38,18 @@ class ReduxNavigation extends React.Component{
 
   componentDidMount(){
     this.setState({
-      timer: 0,
-      showModal: false
+      timer: 0
     })
     this.getTheme()
     SystemVersion.checkVersion(response => {
-      this.setState({isLoading: false})
       if(response == true){
       }
     })
-
 
     Linking.getInitialURL().then(url => {
       this.navigate(url);
     });
     Linking.addEventListener('url', this.handleOpenURL);
-
-    const { setMyDevice } = this.props;
-    setMyDevice({
-      unique_code: DeviceInfo.getUniqueId(),
-      model: DeviceInfo.getModel(),
-      details: {
-        deviceId: DeviceInfo.getDeviceId(),
-        manufacturer: DeviceInfo.getManufacturer()
-      }
-    })
   }
 
   onFocusFunction = () => {
@@ -226,76 +204,8 @@ class ReduxNavigation extends React.Component{
     }
   }
 
-  addSecondaryDevice = () => {
-    const { user, myDevice } = this.props.state;
-    if(user == null || myDevice == null){
-      return
-    }
-    let parameters = {
-      account_id: user.id,
-      model: myDevice.model,
-      unique_code: myDevice.unique_code,
-      details: JSON.stringify(myDevice.details),
-      status: 'secondary'
-    }
-    this.setState({ flagModal: true })
-    navigationRef.current?._navigation.navigate('otpStack', {
-      data: {
-        payload: 'addToDevice',
-        data: parameters
-      }
-    });
-  };
-
-  authorize = () => {
-    const { user, myDevice } = this.props.state;
-    if(user == null || myDevice == null){
-      return
-    }
-    let parameters = {
-      account_id: user.id,
-      model: myDevice.model,
-      unique_code: myDevice.unique_code,
-      details: JSON.stringify(myDevice.details),
-      status: 'primary'
-    }
-    this.setState({isLoading: true})
-    Api.request(Routes.deviceCreate, parameters, response => {
-      this.setState({isLoading: false})
-      this.setState({
-        flagModal: true
-      })
-      if(response.data > 0){
-        Alert.alert(
-          'Message',
-          'Successfully Added! To proceed please login again.',
-          [
-            {text: 'Ok', onPress: () => {
-              const { logout } = this.props;
-              logout()
-              setTimeout(() => {
-                navigationRef.current?._navigation.navigate('loginStack')
-              }, 100)
-            }, style: 'cancel'}
-          ],
-          { cancelable: false }
-        )
-      }else{
-        Alert.alert(
-          'Message',
-          'Please try Again!',
-          [
-            {text: 'Ok', onPress: () => console.log('Ok'), style: 'cancel'}
-          ],
-          { cancelable: false }
-        )
-      }
-    })
-  }
-
   renderModalActivity(){
-    const { acceptPayment, user, theme, activityModal } = this.props.state
-    const { showModal, timer, message } = this.state;
+    const { activityModal } = this.props.state
     return(
       <Modal
         visible={activityModal}
@@ -389,7 +299,6 @@ class ReduxNavigation extends React.Component{
   
   render(){
     const { user, activityModal, myDevice, deviceNotification } = this.props.state
-    const { flagModal, showModals } = this.state;
     return (
       <View style={{
         flex: 1
@@ -429,9 +338,7 @@ const mapDispatchToProps = dispatch => {
     logout: () => dispatch(actions.logout()),
     setActivityModal: (flag) => dispatch(actions.setActivityModal(flag)),
     setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
-    setMyDevice: (device) => dispatch(actions.setMyDevice(device)),
-    updateUser: (user) => dispatch(actions.updateUser(user)),
-    showDeviceNotification: (deviceNotification) => dispatch(actions.showDeviceNotification(deviceNotification))
+    updateUser: (user) => dispatch(actions.updateUser(user))
   };
 };
 let AppReduxNavigation = connect(mapStateToProps, mapDispatchToProps)(ReduxNavigation)
