@@ -14,7 +14,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ModalFooter from 'modules/generic/SecurityAlert';
 import { Color } from 'common'
+import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
 import { navigationRef } from 'modules/generic/SecurityAlert';
+import DeviceInfo from 'react-native-device-info';
 
 const minutes = 60
 class ReduxNavigation extends React.Component{
@@ -45,6 +47,17 @@ class ReduxNavigation extends React.Component{
       if(response == true){
       }
     })
+
+    const { setMyDevice } = this.props;
+    setMyDevice({
+      unique_code: DeviceInfo.getUniqueId(),
+      model: DeviceInfo.getModel(),
+      details: {
+        deviceId: DeviceInfo.getDeviceId(),
+        manufacturer: DeviceInfo.getManufacturer()
+      }
+    })
+    console.log('[device>>>>>>>>>>>>>>]', this.props.state.device)
 
     Linking.getInitialURL().then(url => {
       this.navigate(url);
@@ -299,6 +312,7 @@ class ReduxNavigation extends React.Component{
   
   render(){
     const { user, activityModal, myDevice, deviceNotification } = this.props.state
+    console.l
     return (
       <View style={{
         flex: 1
@@ -338,6 +352,8 @@ const mapDispatchToProps = dispatch => {
     logout: () => dispatch(actions.logout()),
     setActivityModal: (flag) => dispatch(actions.setActivityModal(flag)),
     setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
+    setMyDevice: (device) => dispatch(actions.setMyDevice(device)),
+    showDeviceNotification: (deviceNotification) => dispatch(actions.showDeviceNotification(deviceNotification)),
     updateUser: (user) => dispatch(actions.updateUser(user))
   };
 };
