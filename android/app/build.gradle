@@ -132,8 +132,8 @@ android {
         applicationId "com.payhiram"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20
-        versionName "2.0"
+        versionCode 85
+        versionName "8.5"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
     }
@@ -158,6 +158,14 @@ android {
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
+        huawei {
+            if (project.hasProperty('HUAWEI_UPLOAD_STORE_FILE')) {
+                storeFile file(HUAWEI_UPLOAD_STORE_FILE)
+                storePassword HUAWEI_UPLOAD_STORE_PASSWORD
+                keyAlias HUAWEI_UPLOAD_KEY_ALIAS
+                keyPassword HUAWEI_UPLOAD_KEY_PASSWORD
             }
         }
     }
@@ -196,6 +204,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.2'
+    implementation project(':react-native-fingerprint-scanner')
     implementation project(':react-native-notifications')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
