@@ -57,7 +57,6 @@ class ReduxNavigation extends React.Component{
         manufacturer: DeviceInfo.getManufacturer()
       }
     })
-    console.log('[device>>>>>>>>>>>>>>]', this.props.state.device)
 
     Linking.getInitialURL().then(url => {
       this.navigate(url);
