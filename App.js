@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, PanResponder, Modal, TouchableOpacity, Text, Linking, Alert } from 'react-native';
+import { View, ActivityIndicator, PanResponder, Modal, TouchableOpacity, Text, Linking, Alert, PermissionsAndroid  } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '@redux';
@@ -17,6 +17,9 @@ import { Color } from 'common'
 import DeviceNotificationModal from 'modules/generic/DeviceNotificationModal';
 import { navigationRef } from 'modules/generic/SecurityAlert';
 import DeviceInfo from 'react-native-device-info';
+import Geolocation from '@react-native-community/geolocation';
+import Geocoder from 'react-native-geocoding';
+import config from 'src/config'
 
 const minutes = 60
 class ReduxNavigation extends React.Component{
@@ -42,6 +45,8 @@ class ReduxNavigation extends React.Component{
     this.setState({
       timer: 0
     })
+    Geocoder.init(config.GOOGLE.API_KEY) // need google api key
+    this.getPermission()
     this.getTheme()
     SystemVersion.checkVersion(response => {
       if(response == true){
@@ -62,6 +67,9 @@ class ReduxNavigation extends React.Component{
       this.navigate(url);
     });
     Linking.addEventListener('url', this.handleOpenURL);
+    
+    
+    SystemVersion.askPermission()
   }
 
   onFocusFunction = () => {
@@ -129,7 +137,8 @@ class ReduxNavigation extends React.Component{
       const fourth = await AsyncStorage.getItem(Helper.APP_NAME + 'fourth');
       const index = await AsyncStorage.getItem(Helper.APP_NAME + 'index');
       console.log({
-        index: index
+        index: index,
+        primary
       })
       if(primary != null && secondary != null && tertiary != null) {
         const { setTheme } = this.props;
@@ -140,11 +149,95 @@ class ReduxNavigation extends React.Component{
           fourth: fourth,
           index: parseInt(index)
         })
+      }else{
+        const { setTheme } = this.props;
+        setTheme({
+          primary: '#3F0050',
+          secondary: '#22B173',
+          tertiary: '#F2C94C',
+          fourth: '#000000',
+          index: 0
+        })
       }
     } catch (e) {
       console.log(e)
     }
   }
+
+   //getting locations
+  //getting location access permission
+  getPermission = async() => {
+    if(Platform.OS === 'ios'){
+      this.getOneTimeLocation()
+      this.subscribeLocation()
+    }else{
+      console.log('=====>>>>>=');
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+      console.log('=====>>>>>=', granted);
+      if(granted === PermissionsAndroid.RESULTS.GRANTED){
+        this.getOneTimeLocation()
+        this.subscribeLocation()
+      }
+    }
+  }
+
+  getOneTimeLocation = () => {
+    console.log('Getting location .......');
+    Geolocation.getCurrentPosition(
+      (position) => {
+        console.log('[CURRENT LONGITUDE]', position.coords.longitude);
+        console.log('[CURRENT LATITUDE]', position.coords.latitude);
+        this.decodeLocation(position.coords.longitude, position.coords.latitude)
+      }, (error) => {
+        console.log('[LOCATION ERROR]', error.message);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000
+      }
+    )
+  }
+
+  subscribeLocation = () => {
+    let watchId = Geolocation.watchPosition(
+      (position) => {
+        console.log('[WATCH LONGITUDE===]', position.coords.longitude);
+        console.log('[WATCH LATITUDE]', position.coords.latitude);
+        this.decodeLocation(position.coords.longitude, position.coords.latitude)
+      }, (error) => {
+        console.log('[WATCH LOCATION ERROR]', error.message);
+      },
+      {
+        enableHighAccuracy: false,
+        maximumAge: 1000
+      }
+    )
+  }
+
+  decodeLocation = (longitude, latitude) => {
+    const {setCountryCode} = this.props
+    Geocoder.from(latitude, longitude).then(res => {
+      console.log('[GEOCODING LOCATION]', res.results[0].address_components[0]);
+      let country_code = null
+
+      let address = res.results[0].formatted_address;
+      res.results[0].address_components.forEach(el => {
+        if(el.types.includes('country')){
+          country_code = el.short_name;
+        }
+      })
+
+      console.log('[CURRENT ADDRESS]', country_code);
+      setCountryCode(country_code !== 'US' || country_code !== 'PH' ? 'others' : country_code.toLowerCase())
+
+    }).catch(error => {
+      console.log('[GEOCODING ERROR]', error);
+    })
+  }
+  //===========================================
 
 
   onOpenNotification = (notify) => {
@@ -353,7 +446,8 @@ const mapDispatchToProps = dispatch => {
     setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
     setMyDevice: (device) => dispatch(actions.setMyDevice(device)),
     showDeviceNotification: (deviceNotification) => dispatch(actions.showDeviceNotification(deviceNotification)),
-    updateUser: (user) => dispatch(actions.updateUser(user))
+    updateUser: (user) => dispatch(actions.updateUser(user)),
+    setCountryCode: (location) => dispatch(actions.setCountryCode(location))
   };
 };
 let AppReduxNavigation = connect(mapStateToProps, mapDispatchToProps)(ReduxNavigation)

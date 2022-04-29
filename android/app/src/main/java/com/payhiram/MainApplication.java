@@ -10,6 +10,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import java.lang.reflect.InvocationTargetException;
+import com.zxcpoiu.incallmanager.InCallManagerPackage;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
